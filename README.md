@@ -1,39 +1,54 @@
-# ⚠️ Après avoir lu ce repository et compris son fonctionnement, vous ne téléchargerez plus de repo sur GitHub avec le même sentiment de sécurité.
+# Warning
+
+After reading this repository and understanding how it works, you may never download a GitHub repository with the same sense of safety again.
 
 # bad-hooks
 
-## Référence
+## Overview
 
-Pour comprendre ce qu'est un hook dans le contexte de GitHub Copilot et Visual Studio Code, consultez la documentation officielle :
+This repository demonstrates the security risk posed by project chat hooks.
+
+Its purpose is simple: show that cloning or downloading a repository can be enough to expose a user to unintended code execution in a trusted development environment.
+
+In this example, opening a GitHub Copilot chat in Visual Studio Code triggers a chat hook that executes a Windows script. The payload used here is intentionally harmless and only creates a file on the local machine, outside the Visual Studio Code workspace, but the same mechanism could be used to run genuinely malicious code.
+
+## What Is a Chat Hook?
+
+For background on chat hooks in the context of GitHub Copilot and Visual Studio Code, see the official documentation:
+
 https://code.visualstudio.com/docs/copilot/customization/hooks
 
-## But du dépôt
+## Demonstration Scenario
 
-Ce dépôt a pour objectif de démontrer la dangerosité potentielle des hooks dans un projet. Il illustre comment un simple clonage ou téléchargement du dépôt, suivi de l'ouverture d'un chat dans VS Code avec GitHub Copilot, peut déclencher l'exécution automatique d'un hook qui lance du code sur la machine de l'utilisateur.
+This repository is designed to illustrate the following sequence:
 
-Dans cet exemple, le hook crée simplement un fichier quelque part sur l'ordinateur sous Windows, mais il pourrait tout aussi bien exécuter du code malveillant.
+1. A user clones or downloads the repository on a Windows machine.
+2. The user opens the project in Visual Studio Code.
+3. The user starts a GitHub Copilot chat.
+4. A configured chat hook is invoked automatically.
+5. The chat hook executes local code on the user's machine.
 
-## Comment ça fonctionne
+In this proof of concept, the script only creates a file outside the Visual Studio Code workspace as evidence of execution.
 
-1. **Clonage ou téléchargement** : L'utilisateur clone ou télécharge ce dépôt sur sa machine Windows.
-2. **Ouverture dans VS Code** : L'utilisateur ouvre le dossier dans Visual Studio Code.
-3. **Activation du hook** : Lorsqu'un chat est ouvert avec GitHub Copilot, un hook est appelé automatiquement.
-4. **Exécution du code** : Le hook exécute un script qui crée un fichier sur l'ordinateur (démonstration de l'exécution automatique de code).
+## Repository Purpose
 
-## Mise en garde
+The goal of this repository is educational. It exists to highlight that automation features integrated into developer tooling can create an unexpected trust boundary.
 
-- Ce dépôt est à but pédagogique et démontre un risque de sécurité.
-- N'exécutez jamais de code ou de hooks provenant de dépôts non fiables.
-- Vérifiez toujours le contenu des hooks dans `.github/hooks/` ou `.git/hooks/` avant d'ouvrir un projet téléchargé.
+The central point is not the specific payload used here, but the fact that code execution can happen as a side effect of interacting with a repository in what appears to be a normal and safe workflow.
 
-## Exemple de hook
+## Safety Notes
 
-Le script concerné se trouve dans le dossier `.github/hooks/` et s'exécute automatiquement dans certains contextes.
+- This repository is for awareness and demonstration purposes only.
+- It should not be used to deploy malicious behavior.
+- You should review any chat hook-related configuration before trusting a repository.
+- In particular, inspect directories such as `.github/hooks/` and `.git/hooks/` when assessing an unfamiliar project.
+- **Important**: Individual users cannot deactivate Copilot chat hooks in VS Code, as chat hooks are enabled by default in workspace settings. The only way to disable them is through organization-managed VS Code installations, where administrators can enforce enterprise policies to block chat hook execution.
+- **Temporary mitigation**: To reduce this vulnerability, install Windows policies (see https://code.visualstudio.com/docs/enterprise/policies) and disable chat hooks.
 
----
+## Chat Hook Location
 
-**Attention :** Ce dépôt ne doit pas être utilisé à des fins malveillantes. Il sert uniquement à sensibiliser sur les risques liés aux hooks dans les projets partagés.
+The demonstration script is located in `.github/hooks/`.
 
----
+## Final Takeaway
 
-Après avoir lu ce repository et compris son fonctionnement, vous ne téléchargerez plus de repo sur GitHub avec le même sentiment de sécurité.
+If this repository makes one point clearly, it is this: downloading a repository should not automatically be treated as a safe action.
